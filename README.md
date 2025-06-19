@@ -36,16 +36,16 @@ import (
 )
 
 func main() {
-	e := events.NewBuilder().
-		// Listen for integer events
-		events.Listen(func(num int) {
-			fmt.Printf("Received int: %d\n", num)
-		}).
-		// Listen for string events
-		events.Listen(func(text string) {
-			fmt.Printf("Received string: %s\n", text)
-		}).
-		Build()
+	b := events.NewBuilder()
+	// Listen for integer events
+	events.Listen(b, func(num int) {
+		fmt.Printf("Received int: %d\n", num)
+	})
+	// Listen for string events
+	events.Listen(b, func(text string) {
+		fmt.Printf("Received string: %s\n", text)
+	})
+	e := b.Build()
 
 	events.Emit(e, "Hello, events!")
 	events.Emit(e, 123)
@@ -72,31 +72,16 @@ This function registers a listener for a specific event type. The `listener` fun
 
 ```go
 // Listen for int events
-builder = events.Listen(builder, func(num int) {
+events.Listen(builder, func(num int) {
 	fmt.Printf("Number: %d\n", num)
 })
 
 // Listen for string events
-builder = events.Listen(builder, func(text string) {
+events.Listen(builder, func(text string) {
 	fmt.Printf("Text: %s\n", text)
 })
 ```
 
-### `Wrap(wrapped func(Builder) Builder) Builder`
-
-The `Wrap` method allows for a more organized and modular way to register listeners or apply other builder configurations. It takes a function that receives the current `Builder` and returns a modified `Builder`. This is particularly useful for grouping related listener registrations or applying common patterns.
-
-```go
-// Grouping string listeners
-e := events.NewBuilder().
-	Wrap(func(b events.Builder) events.Builder {
-		return events.Listen(b, func(text string) { print(text) })
-	}).
-	Wrap(func(b events.Builder) events.Builder {
-		return events.Listen(b, func(text string) { print("Another string listener: " + text) })
-	}).
-	Build()
-```
 
 ### `GoroutinePerListener(use bool) Builder`
 
