@@ -45,10 +45,15 @@ func main() {
 	events.Listen(b, func(text string) {
 		fmt.Printf("Received string: %s\n", text)
 	})
+    // this is triggered always
+    events.ListenToAll(b, func(e any) {
+		fmt.Printf("any receiver receives %s\n", a)
+    })
 	e := b.Build()
 
 	events.Emit(e, "Hello, events!")
 	events.Emit(e, 123)
+	events.EmitAny(e, 123) // this method is not generic
 }
 ```
 
