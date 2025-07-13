@@ -8,8 +8,8 @@ type eventKey reflect.Type
 
 type event interface{}
 
-type listener func(any)
-type anyListener func(event any)
+type listener func(emiter Events, event any)
+type anyListener func(emiter Events, event any)
 
 type events struct {
 	listeners            map[eventKey][]listener
@@ -30,11 +30,11 @@ func getAnyEventKey(event any) eventKey {
 func emitAny(e Events, event any) {
 	if e.goroutinePerListener {
 		for _, listener := range e.allListeners {
-			go listener(event)
+			go listener(e, event)
 		}
 	} else {
 		for _, listener := range e.allListeners {
-			listener(event)
+			listener(e, event)
 		}
 	}
 }
@@ -48,11 +48,11 @@ func Emit[Event event](e Events, event Event) {
 	}
 	if e.goroutinePerListener {
 		for _, listener := range eventListeners {
-			go listener(event)
+			go listener(e, event)
 		}
 	} else {
 		for _, listener := range eventListeners {
-			listener(event)
+			listener(e, event)
 		}
 	}
 }
@@ -66,11 +66,11 @@ func EmitAny(e Events, event any) {
 	}
 	if e.goroutinePerListener {
 		for _, listener := range eventListeners {
-			go listener(event)
+			go listener(e, event)
 		}
 	} else {
 		for _, listener := range eventListeners {
-			listener(event)
+			listener(e, event)
 		}
 	}
 }
