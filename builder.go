@@ -35,6 +35,12 @@ func ListenToAll(b Builder, listener func(emiter Events, event any)) {
 	b.events.allListeners = append(b.events.allListeners, listener)
 }
 
+// this is a method to remove circular dependency
+// it returns pointer to still build Events
+func (b Builder) Events() Events {
+	return b.events
+}
+
 func (b Builder) Build() Events {
 	e := *b.events
 	return &e
