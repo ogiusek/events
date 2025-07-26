@@ -20,18 +20,18 @@ func (b Builder) GoroutinePerListener(use bool) {
 	b.events.goroutinePerListener = use
 }
 
-func Listen[Event event](b Builder, listener func(emiter Events, event Event)) {
+func Listen[Event event](b Builder, listener func(event Event)) {
 	eventKey := getEventKey[Event]()
 	_, ok := b.events.listeners[eventKey]
 	if !ok {
 		b.events.listeners[eventKey] = nil
 	}
-	b.events.listeners[eventKey] = append(b.events.listeners[eventKey], func(emiter Events, e any) {
-		listener(emiter, e.(Event))
+	b.events.listeners[eventKey] = append(b.events.listeners[eventKey], func(e any) {
+		listener(e.(Event))
 	})
 }
 
-func ListenToAll(b Builder, listener func(emiter Events, event any)) {
+func ListenToAll(b Builder, listener func(event any)) {
 	b.events.allListeners = append(b.events.allListeners, listener)
 }
 
